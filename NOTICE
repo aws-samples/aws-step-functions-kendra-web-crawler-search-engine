@@ -1,0 +1,19 @@
+**********************
+THIRD PARTY COMPONENTS
+**********************
+This software includes third party software subject to the following copyrights:
+
+* AWS CDK under the Apache License Version 2.0
+* AWS JavaScript SDK under the Apache License Version 2.0
+* TypeScript under the Apache License Version 2.0
+* Webpack under the MIT Licence
+* Babel under the MIT Licence
+* Puppeteer under the Apache License Version 2.0
+* chrome-aws-lambda under the MIT Licence
+* Commander.js under the MIT License
+* Lodash under the MIT License
+* uuid under the MIT License
+* TypeScript loader for webpack under the MIT License
+* Fork TS Checker Webpack Plugin under the MIT License
+* tsconfig-paths-webpack-plugin under the MIT License
+* source-map-loader under the MIT License

@@ -1,0 +1,15 @@
+build
+dist
+chromelayer
+node_modules
+*.iml
+*.d.ts
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db

@@ -1,0 +1,20 @@
+#!/bin/bash
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
+set -e;
+
+# Parse arguments
+CDK_PROFILE=default
+KENDRA="false"
+while [[ "$#" -gt 0 ]]; do case $1 in
+  --profile) CDK_PROFILE="$2"; shift;;
+  --with-kendra) KENDRA="true";;
+esac; shift; done
+
+cd infrastructure
+
+# Destroy
+cdk --profile $CDK_PROFILE destroy '*' -c kendra=$KENDRA --require-approval never
+
+cd ..

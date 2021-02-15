@@ -1,0 +1,24 @@
+#!/bin/bash
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
+set -e;
+
+# Parse arguments
+CDK_PROFILE=default
+KENDRA="false"
+while [[ "$#" -gt 0 ]]; do case $1 in
+  --profile) CDK_PROFILE="$2"; shift;;
+  --with-kendra) KENDRA="true";;
+esac; shift; done
+
+# Build the lambdas
+cd lambda && npm i && npm run build
+
+# Build the infrastructure
+cd ../infrastructure && npm i && npm run build
+
+# Deploy
+cdk --profile $CDK_PROFILE deploy '*' -c kendra=$KENDRA --require-approval never
+
+cd ..
