@@ -1,2 +1,13 @@
+*.js
+!jest.config.js
+*.d.ts
+node_modules
+chromelayer
+build
+dist
 *.iml
 .idea
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out

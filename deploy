@@ -12,13 +12,8 @@ while [[ "$#" -gt 0 ]]; do case $1 in
   --with-kendra) KENDRA="true";;
 esac; shift; done
 
-# Build the lambdas
-cd lambda && npm i && npm run build
-
-# Build the infrastructure
-cd ../infrastructure && npm i && npm run build
+# Build
+npm ci && npm run build
 
 # Deploy
-cdk --profile $CDK_PROFILE deploy '*' -c kendra=$KENDRA --require-approval never
-
-cd ..
+npx cdk --profile $CDK_PROFILE deploy '*' -c kendra=$KENDRA --require-approval never

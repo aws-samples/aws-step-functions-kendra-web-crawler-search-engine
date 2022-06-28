@@ -4,6 +4,4 @@
 
 set -e;
 
-cd lambda
-npm run env -- ts-node bin/local-crawl.ts "$@"
-cd ..
+npx ts-node bin/local-crawl.ts "$@"

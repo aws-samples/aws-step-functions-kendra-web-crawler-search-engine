@@ -12,9 +12,5 @@ while [[ "$#" -gt 0 ]]; do case $1 in
   --with-kendra) KENDRA="true";;
 esac; shift; done
 
-cd infrastructure
-
 # Destroy
-cdk --profile $CDK_PROFILE destroy '*' -c kendra=$KENDRA --require-approval never
-
-cd ..
+npx cdk --profile $CDK_PROFILE destroy '*' -c kendra=$KENDRA --require-approval never

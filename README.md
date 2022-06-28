@@ -31,24 +31,19 @@ The web crawler is best explained by the AWS Step Functions State Machine diagra
 
 * Read Queued Urls: Reads all non-visited URLs from the URL queue DynamoDB table.
 * Crawl Page And Queue Urls: Visits a single webpage, extracts its content, and writes new URLs to the URL queue. This step is executed
-in parallel across a batch of URLs. Batch size is configured in `lambda/src/config/constants.ts`.
+in parallel across a batch of URLs. Batch size is configured in `lambda/config/constants.ts`.
 * Continue Execution: This is responsible for spawning a new state machine execution as we approach the [execution history limit](https://docs.aws.amazon.com/step-functions/latest/dg/bp-history-limit.html).
 * Complete Crawl: Delete the URL queue DynamoDB table and trigger a sync of the Kendra data source if applicable.
-
-## Project Structure
-
-* The `infrastructure` directory contains the CDK code which defines the AWS infrastructure.
-* The `lambda` directory contains the source code for the web crawler lambdas
 
 ## Prerequisites
 
 * The [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) must be installed *and* configured with an AWS account with a profile (see https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html for instructions on how to do this on your preferred development platform). Please ensure your profile is configured with a default AWS region.
-* This project requires [Node.js](http://nodejs.org/) ≥ 10.17.0 and [NPM](https://npmjs.org/).
+* This project requires [Node.js](http://nodejs.org/) ≥ 16 and [NPM](https://npmjs.org/) ≥ 8.3.0.
 To make sure you have them available on your machine, try running the following command.
 ```sh
 npm -v && node -v
 ```
-* Install or update the [AWS CDK CLI](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install) from npm.
+* Install or update the [AWS CDK CLI](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install) from npm. This uses CDK v2.
 ```sh
 npm i -g aws-cdk
 ```
