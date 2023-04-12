@@ -35,7 +35,7 @@
     "puppeteer-core": "10.1.0",
     "chrome-aws-lambda": "10.1.0",
     "commander": "^9.3.0",
-    "aws-sdk": "^2.1163.0",
+    "aws-sdk": "^2.1354.0",
     "lodash": "^4.17.21",
     "uuid": "^8.3.2"
   },
