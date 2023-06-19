@@ -29,7 +29,7 @@
     "esbuild": "0"
   },
   "dependencies": {
-    "aws-cdk-lib": "2.29.1",
+    "aws-cdk-lib": "2.80.0",
     "constructs": "10.1.42",
     "source-map-support": "^0.5.21",
     "puppeteer-core": "10.1.0",
