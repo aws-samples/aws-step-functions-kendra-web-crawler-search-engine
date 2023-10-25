@@ -46,10 +46,12 @@ export const createContextTable = async (target: CrawlInputWithId, contextTableN
         KeyType: 'RANGE',
       },
     ],
+    BillingMode: 'PAY_PER_REQUEST'
+    /*,
     ProvisionedThroughput: {
       ReadCapacityUnits: CONTEXT_TABLE_READ_CAPACITY,
       WriteCapacityUnits: CONTEXT_TABLE_WRITE_CAPACITY,
-    },
+    },*/
   }).promise();
 
   console.log('Waiting for table', TableName, 'to finish creation');

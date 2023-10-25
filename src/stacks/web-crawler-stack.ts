@@ -28,6 +28,9 @@ export class WebCrawlerStack extends Stack {
   constructor(scope: Construct, id: string, props: WebCrawlerStackProps) {
     super(scope, id, props);
 
+    // S3 bucket to store working files and output from step functions
+    const workingBucket = new Bucket(this, 'WebCrawlerWorkingBucket');
+
     // Dynamodb table to store our web crawl history
     const historyTable = new Table(this, 'CrawlerHistoryTable', {
       partitionKey: {
@@ -67,10 +70,11 @@ export class WebCrawlerStack extends Stack {
       createContextTablePolicy,
       kendra: props.kendra,
       historyTable,
+      workingBucket,
       webCrawlerStateMachineArn,
     });
 
     // Create the state machine
-    new WebCrawlerStateMachine(this, 'WebCrawlerStateMachine', { steps });
+    const webCrawlerStateMachine = new WebCrawlerStateMachine(this, 'WebCrawlerStateMachine', { steps, workingBucket, webCrawlerStateMachineArn});
   }
 }

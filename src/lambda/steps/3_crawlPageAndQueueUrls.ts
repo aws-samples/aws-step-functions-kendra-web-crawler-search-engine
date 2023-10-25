@@ -51,7 +51,7 @@ export const crawlPageAndQueueUrls = async (
     }, destination);
     console.log('Synced content from', path);
 
-    console.log('Queueing', urlPaths.length, 'new urls to visit', urlPaths);
+    console.log('Queueing ', urlPaths.length, ' new urls to visit', urlPaths);
     await queuePaths(contextTableName, urlPaths);
   } catch (e) {
     // Failure to crawl a url should not fail the entire process, we skip it and move on.

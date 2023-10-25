@@ -51,6 +51,8 @@ const lambda = new AWS.Lambda();
       Payload: JSON.stringify(crawlInput),
     }).promise();
 
+    console.log('startCrawl response: ', response)
+    
     if (response.Payload) {
       const { stateMachineExecutionArn } = JSON.parse(response.Payload as string);
 
