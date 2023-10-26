@@ -6,6 +6,6 @@
  */
 export const getEnvVariableAsInteger = (key: string): number => {
     const value = parseInt(process.env[key] || '');
-    if (Number.isNaN(value)) throw Error(`Expected integer value for '${key}'`);
+    if (Number.isNaN(value)) throw Error(`Expected a number for '${key}'`);
     return value;
 }
