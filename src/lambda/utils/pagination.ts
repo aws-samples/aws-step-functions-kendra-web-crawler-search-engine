@@ -35,8 +35,6 @@ export const paginatedRequest = async <Params>(
     }
     token = response[nextTokenKey];
   } while (token);
-  //
-  console.log('paginatedRequest.results.length: ', results.length)
   
   return results;
 };

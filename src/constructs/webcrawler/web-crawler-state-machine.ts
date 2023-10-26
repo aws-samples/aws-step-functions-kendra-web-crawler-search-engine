@@ -1,13 +1,14 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
 import { Construct } from 'constructs';
-import { Choice, Succeed, Map, StateMachine, Condition, TaskInput, CustomState, LogLevel } from "aws-cdk-lib/aws-stepfunctions";
+import { Choice, Succeed, StateMachine, Condition, TaskInput, CustomState, LogLevel } from "aws-cdk-lib/aws-stepfunctions";
 import { LambdaInvoke } from "aws-cdk-lib/aws-stepfunctions-tasks";
 import { WebCrawlerSteps } from './web-crawler-step-lambdas';
 import { WEB_CRAWLER_STATE_MACHINE_NAME } from './constants';
-import {Bucket} from "aws-cdk-lib/aws-s3";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 import { PolicyStatement, Effect } from 'aws-cdk-lib/aws-iam';
-import {LogGroup} from 'aws-cdk-lib/aws-logs';
+import { LogGroup } from 'aws-cdk-lib/aws-logs';
+import { DEFAULT_DISTRIBUTED_MAP_CONCURRENCY_LIMIT } from './constants';
 
 const { booleanEquals } = Condition;
 
@@ -24,11 +25,6 @@ export default class WebCrawlerStateMachine extends Construct {
   constructor(scope: Construct, id: string, props: WebCrawlerStateMachineProps) {
     super(scope, id);
 
-    // Create tasks for each of the web crawler steps
-    // const crawlPageAndQueueUrls = new LambdaInvoke(this, 'CrawlPageAndQueueUrls', {
-    //  lambdaFunction: props.steps.crawlPageAndQueueUrls,
-    //});
-
     const readQueuedUrls = new LambdaInvoke(this, 'ReadQueuedUrls', {
       lambdaFunction: props.steps.readQueuedUrls,
       payload: TaskInput.fromJsonPathAt('$$.Execution.Input'),
@@ -43,13 +39,11 @@ export default class WebCrawlerStateMachine extends Construct {
     // As of Oct 2023, CDK does not support Distributed Map state yet
     // See: https://github.com/aws/aws-cdk/issues/23216
     // Using CustomState as a workaround
-    //const dummyMap = new Map(this, "DummyMap");
-    //dummyMap.iterator(crawlPageAndQueueUrls).next(readQueuedUrls)
     const createDistMapForEachQueuedUrl = () => {
       return new CustomState(this, "ForEachQueuedUrl", {
         stateJson: {
           "Type": "Map",
-          "MaxConcurrency": 1000,
+          "MaxConcurrency": DEFAULT_DISTRIBUTED_MAP_CONCURRENCY_LIMIT,
           "Catch": [
             {
               "ErrorEquals": [
@@ -120,15 +114,11 @@ export default class WebCrawlerStateMachine extends Construct {
             // Continue crawling in another state machine execution
             continueExecution.next(new Succeed(this, 'ContinuingInAnotherExecution')))
             // Crawl every page we read from the queue in parallel
-            //.otherwise(new Map(this, 'ForEachQueuedUrl', { itemsPath: '$.Payload.queuedPaths' })
-            //  .iterator(crawlPageAndQueueUrls).addCatch(readQueuedUrls)
-            //  .next(readQueuedUrls))
-            // Change from Inline Map to Distributed Map
             .otherwise(createDistMapForEachQueuedUrl().next(readQueuedUrls))
           )
           // No urls in the queue, so we can complete the crawl
           .otherwise(completeCrawl.next(new Succeed(this, 'Done'))));
-
+    
     const logGroup = new LogGroup(this, 'ExecutionLogs');
     const webCrawlerStateMachine = new StateMachine(this, `${id}-StateMachine`, {
       stateMachineName: WEB_CRAWLER_STATE_MACHINE_NAME,
@@ -148,7 +138,7 @@ export default class WebCrawlerStateMachine extends Construct {
     // for child executions. 
     webCrawlerStateMachine.addToRolePolicy(new PolicyStatement({
       effect: Effect.ALLOW,
-      actions: ["states:*"],
+      actions: ["states:StartExecution", "states:StopExecution", "states:StartSyncExecution"],
       resources: [props.webCrawlerStateMachineArn],
     }));
 

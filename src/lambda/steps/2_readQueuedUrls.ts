@@ -1,13 +1,15 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
-import { STATE_MACHINE_URL_THRESHOLD } from '../config/constants';
 import { CrawlContext } from '../crawler/types';
 import { readBatchOfUrlsToVisit } from '../utils/contextTable';
 import { getHistoryEntry, putHistoryEntry } from '../utils/historyTable';
+import { getEnvVariableAsInteger } from '../utils/env';
 
 import S3 from 'aws-sdk/clients/s3';
+
 const s3 = new S3();
 const { WORKING_BUCKET } = process.env;
+const STATE_MACHINE_URL_THRESHOLD = getEnvVariableAsInteger("STATE_MACHINE_URL_THRESHOLD");
 
 /**
  * Read all non visited urls from the context database so that they can be distributed to the sync lambdas
@@ -38,7 +40,7 @@ export const readQueuedUrls = async (crawlContext: CrawlContext) => {
     batchUrlCount: totalBatchUrlCount,
   });
 
-  let queuedPaths = urlsToVisit.map((path) => ({
+  const queuedPaths = urlsToVisit.map((path) => ({
     path,
     crawlContext
   }))
@@ -46,7 +48,7 @@ export const readQueuedUrls = async (crawlContext: CrawlContext) => {
   // Save queuedPaths to S3
   const folder = 'temp-queued-paths';
   const key = `${folder}/${crawlContext.crawlId}.queuedPaths.json`;
-  let result = await s3.putObject({ Bucket: WORKING_BUCKET, Key: key, Body: JSON.stringify(queuedPaths) }).promise();
+  const result = await s3.putObject({ Bucket: WORKING_BUCKET, Key: key, Body: JSON.stringify(queuedPaths) }).promise();
   console.log('queuedPaths saved to S3.', result);
   
   // The payload include the S3 location for the queuedPaths to avoid hitting max request size limit of 256KB.

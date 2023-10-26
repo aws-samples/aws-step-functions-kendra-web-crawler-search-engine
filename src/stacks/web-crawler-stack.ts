@@ -75,6 +75,6 @@ export class WebCrawlerStack extends Stack {
     });
 
     // Create the state machine
-    const webCrawlerStateMachine = new WebCrawlerStateMachine(this, 'WebCrawlerStateMachine', { steps, workingBucket, webCrawlerStateMachineArn});
+    new WebCrawlerStateMachine(this, 'WebCrawlerStateMachine', { steps, workingBucket, webCrawlerStateMachineArn});
   }
 }
