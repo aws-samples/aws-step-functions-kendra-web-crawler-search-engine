@@ -29,9 +29,9 @@ The web crawler is best explained by the AWS Step Functions State Machine diagra
 
 ![state-machine-diagram](.readme-resources/state-machine.png)
 
-* Read Queued Urls: Reads all non-visited URLs from the URL queue DynamoDB table.
+* Read Queued Urls: Reads a batch of non-visited URLs from the URL queue DynamoDB table. The default batch size is configured in `src/constructs/webcrawler/constants.ts`. You can also update the environment variable `PARALLEL_URLS_TO_SYNC` to change the batch size after the CDK stack is deployed.
 * Crawl Page And Queue Urls: Visits a single webpage, extracts its content, and writes new URLs to the URL queue. This step is executed
-in parallel across a batch of URLs. Batch size is configured in `lambda/config/constants.ts`.
+in parallel across the batch of URLs that is passed on from the `Read Queued Urls` step.
 * Continue Execution: This is responsible for spawning a new state machine execution as we approach the [execution history limit](https://docs.aws.amazon.com/step-functions/latest/dg/bp-history-limit.html).
 * Complete Crawl: Delete the URL queue DynamoDB table and trigger a sync of the Kendra data source if applicable.
 

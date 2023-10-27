@@ -81,6 +81,7 @@ export default class WebCrawlerStepLambdas extends Construct {
     // Lambda for cleaning up (and optionally syncing kendra) when crawling has finished
     const completeCrawl = buildLambda('CompleteCrawlLambda', 'completeCrawlHandler');
     props.historyTable.grantReadWriteData(completeCrawl);
+    props.workingBucket.grantReadWrite(completeCrawl);
     completeCrawl.addToRolePolicy(props.createContextTablePolicy(['DeleteTable']));
     props.kendra && completeCrawl.addToRolePolicy(new PolicyStatement({
       effect: Effect.ALLOW,
