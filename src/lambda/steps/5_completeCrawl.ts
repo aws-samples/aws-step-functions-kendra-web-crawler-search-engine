@@ -4,6 +4,7 @@ import * as AWS from 'aws-sdk';
 import { updateHistoryEntry } from '../utils/historyTable';
 import { CrawlContext } from '../crawler/types';
 import { deleteContextTable } from '../utils/contextTable';
+import { deleteQueuedPathsFromS3 } from '../utils/queuedPaths';
 
 const kendra = new AWS.Kendra();
 
@@ -20,6 +21,10 @@ export const completeCrawl = async (
   crawlContext: CrawlContext,
   kendraDataSourceDetails?: KendraDataSourceDetails,
 ) => {
+  // Delete the temporary queuedPaths file from the S3 working bucket
+  console.log('Deleting queuedPaths file from S3');
+  await deleteQueuedPathsFromS3(crawlContext);
+
   // Delete the context table as we have visited all urls in the queue
   console.log('Deleting context table', crawlContext.contextTableName);
   await deleteContextTable(crawlContext.contextTableName);

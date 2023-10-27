@@ -35,6 +35,7 @@ export const paginatedRequest = async <Params>(
     }
     token = response[nextTokenKey];
   } while (token);
+  
   return results;
 };
 

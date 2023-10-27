@@ -3,8 +3,10 @@
 import * as AWS from 'aws-sdk';
 import * as _ from 'lodash';
 import { CrawlInputWithId } from '../crawler/types';
-import { CONTEXT_TABLE_READ_CAPACITY, CONTEXT_TABLE_WRITE_CAPACITY, PARALLEL_URLS_TO_SYNC } from '../config/constants';
 import { dynamodbPaginatedRequest } from './pagination';
+import { getEnvVariableAsInteger } from './env';
+
+const PARALLEL_URLS_TO_SYNC = getEnvVariableAsInteger("PARALLEL_URLS_TO_SYNC");
 
 const ddb = new AWS.DynamoDB();
 const ddbDoc = new AWS.DynamoDB.DocumentClient();
@@ -46,10 +48,7 @@ export const createContextTable = async (target: CrawlInputWithId, contextTableN
         KeyType: 'RANGE',
       },
     ],
-    ProvisionedThroughput: {
-      ReadCapacityUnits: CONTEXT_TABLE_READ_CAPACITY,
-      WriteCapacityUnits: CONTEXT_TABLE_WRITE_CAPACITY,
-    },
+    BillingMode: 'PAY_PER_REQUEST'
   }).promise();
 
   console.log('Waiting for table', TableName, 'to finish creation');
