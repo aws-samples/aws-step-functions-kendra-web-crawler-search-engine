@@ -1,11 +1,11 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
 import * as AWS from 'aws-sdk';
-import chrome from 'chrome-aws-lambda';
+import chrome from '@sparticuz/chromium';
+import puppeteer, { Browser } from 'puppeteer';
 import { extractPageContentAndUrls } from '../crawler/core';
 import { CrawlContext } from '../crawler/types';
 import { markPathAsVisited, queuePaths } from '../utils/contextTable';
-import { Browser } from "puppeteer-core";
 
 const s3 = new AWS.S3();
 
@@ -27,12 +27,11 @@ export const crawlPageAndQueueUrls = async (
     await markPathAsVisited(contextTableName, path);
     console.log('Marked path', path, 'as visited.');
 
-    browser = await chrome.puppeteer.launch({
+    browser = await puppeteer.launch({
       args: chrome.args,
       defaultViewport: chrome.defaultViewport,
-      executablePath: await chrome.executablePath,
+      executablePath: await chrome.executablePath(),
       headless: chrome.headless,
-      ignoreHTTPSErrors: true,
     });
 
     // If we've got a bucket for the kendra data source, provide this as a destination for the crawler, otherwise leave

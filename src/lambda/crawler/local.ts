@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
-import { Browser } from 'puppeteer-core';
+import { Browser } from 'puppeteer';
 import { extractPageContentAndUrls } from './core';
 import { CrawlDestination, CrawlInput } from './types';
 

@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MIT-0
 import puppeteer from 'puppeteer';
 import { Command } from 'commander';
-import { Browser } from 'puppeteer-core';
 import { crawl } from '../src/lambda/crawler/local';
 
 const program = new Command();
@@ -15,7 +14,7 @@ program
 const options = program.parse(process.argv).opts();
 
 (async () => {
-  const browser = await puppeteer.launch() as unknown as Browser;
+  const browser = await puppeteer.launch();
 
   const result = await crawl(browser, {
     crawlName: 'local-crawl',

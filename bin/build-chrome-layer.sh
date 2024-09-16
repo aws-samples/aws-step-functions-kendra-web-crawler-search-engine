@@ -6,4 +6,8 @@
 set -e
 
 mkdir -p chromelayer/nodejs/node_modules/
-cd chromelayer/nodejs && npm install chrome-aws-lambda@10.1.0 puppeteer-core@10.1.0 --no-bin-links --no-optional --no-package-lock --no-save --no-shrinkwrap && cd -
+cd chromelayer/nodejs && npm install --no-bin-links --no-optional --no-package-lock --no-save --no-shrinkwrap \
+  @sparticuz/chromium@127.0.0 \
+  puppeteer@23.3.0 \
+  puppeteer-core@23.3.0 \
+  && cd -
