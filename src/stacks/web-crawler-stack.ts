@@ -26,7 +26,10 @@ export interface WebCrawlerStackProps extends StackProps {
 export class WebCrawlerStack extends Stack {
 
   constructor(scope: Construct, id: string, props: WebCrawlerStackProps) {
-    super(scope, id, props);
+    super(scope, id, {
+      ...props,
+      description: 'Web Crawler (uksb-c7sgmly0kc) (tag:crawler)'
+    });
 
     // S3 bucket to store working files and output from step functions
     const workingBucket = new Bucket(this, 'WebCrawlerWorkingBucket');

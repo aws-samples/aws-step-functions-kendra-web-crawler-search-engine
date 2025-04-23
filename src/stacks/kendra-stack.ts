@@ -15,7 +15,10 @@ export class KendraStack extends Stack {
   public readonly kendra: KendraInfrastructureProps;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
-    super(scope, id, props);
+    super(scope, id, {
+      ...props,
+      description: 'Kendra (uksb-c7sgmly0kc) (tag:kendra)',
+    });
 
     // Bucket to store our crawled webpages
     const dataSourceBucket = new Bucket(this, 'KendraDataSourceBucket');
