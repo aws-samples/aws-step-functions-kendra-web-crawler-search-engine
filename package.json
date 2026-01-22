@@ -36,7 +36,7 @@
     "@sparticuz/chromium": "127.0.0",
     "commander": "^9.3.0",
     "aws-sdk": "^2.1354.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "uuid": "^8.3.2"
   },
   "overrides": {
